@@ -1,10 +1,11 @@
 let accessToken;
-const clientID = "39e5a52079bd485f8dab3d4c0556de73";
+const clientID = '39e5a52079bd485f8dab3d4c0556de73';
 const redirectURI = "http://localhost:3000/";
 
 const Spotify = {
-
+    
   getAccessToken() {
+
     if (accessToken) {
       return accessToken;
     }
@@ -20,24 +21,38 @@ const Spotify = {
       window.history.pushState("Access Token", null, "/");
       return accessToken;
     } else {
-      const accessURL = `https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectURI}
-            `;
+      const accessURL = `https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectURI}`;
       window.location = accessURL;
     }
   },
 
   search(term) {
     const accessToken = Spotify.getAccessToken();
+    console.log(accessToken)
 
     return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, 
     { headers: {
         Authorization: `Bearer ${accessToken}`,
-      },
+        // 'Access-Control-Allow-Header': 'http://localhost:3000',
+        // Origin: 'https://localhost:3000'
+      }
     })
-    .then(response => {
-        return response.json()
-    })
+
+    // var myHeaders = new Headers();
+    // myHeaders.append("Authorization", "Bearer BQB2p2uHUv19Oi9RZQravwPmPzuKsH7wyeP3ZS5Z3dqzBBcSEqEdiEtLBk4mZmA3LUeG78ETFEjkE9eqwNrNb0rjrmbPJxnx-5SWmLEru-FFt3TiY9A-uL1NJa78LRiHeoa_TD3E9XfA8wBt_nraYecl_A8WAGbCCV41KhkHSQriOpdZDH4H");
+    
+    // var requestOptions = {
+    //   method: 'GET',
+    //   headers: myHeaders,
+    //   redirect: 'follow'
+    // };
+    
+    // fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, requestOptions)
+    //   .then(response => response.text())
+    // //   .then(result => console.log(result))
+      
     .then(jsonResponse => {
+        console.log(jsonResponse)
         if(!jsonResponse.track) {
             return [];
         } else {
@@ -49,6 +64,7 @@ const Spotify = {
             }))
         }
     })
+    .catch(error => console.log('error', error))
   },
 
   savePlaylist(name, trackUris) {
@@ -75,11 +91,13 @@ const Spotify = {
               response.json()
           })
           .then(jsonResponse => {
+              console.log(jsonResponse)
               const playlistId = jsonResponse.id
-              return fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${playlistId}/tracks`,
+              return fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${playlistId}/tracks`, {
               headers: headers,
               method: 'POST',
               body: JSON.stringify({ uris: trackUris })
+          }
               )
           })
       })
