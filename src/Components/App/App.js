@@ -7,8 +7,7 @@ import Playlist from './../Playlist/Playlist';
 class App extends Component {
   constructor(props) {
     super(props)
-    this.addTrack = this.addTrack.bind(this)
-    this.removeTrack = this.removeTrack.bind(this)
+
     this.state = {
       playlistName: 'Tits playlist',
       playlistTracks: [
@@ -41,6 +40,13 @@ class App extends Component {
       }
       ]
     }
+
+    this.addTrack = this.addTrack.bind(this)
+    this.removeTrack = this.removeTrack.bind(this)
+    this.updatePlaylistName = this.updatePlaylistName.bind(this)
+    this.savePlaylist = this.savePlaylist.bind(this)
+    this.search = this.search.bind(this)
+
   }
 
   removeTrack(track) {
@@ -55,6 +61,17 @@ class App extends Component {
     }
   }
 
+  updatePlaylistName(name) {
+    this.setState({ playlistName: name })
+  }
+
+  savePlaylist() {
+    const trackUris = this.state.playlistTracks.map(track => track.uri)
+  }
+
+  search(term) {
+    console.log(term)
+  }
 
   render() {
   return (
@@ -63,10 +80,17 @@ class App extends Component {
         Li<span className="highlight">st</span>r
       </h1>
       <div className="App">
-        <SearchBar />
+        <SearchBar onSearch={this.search}/>
         <div className="App-playlist">
-          <SearchResults onAdd={this.addTrack} searchResults={this.state.searchResults}/>
-          <Playlist onRemove={this.removeTrack} playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks}/>
+          <SearchResults 
+          onAdd={this.addTrack} 
+          searchResults={this.state.searchResults}/>
+          <Playlist 
+          onSave={this.savePlaylist} 
+          onNameChange={this.updatePlaylistName} 
+          onRemove={this.removeTrack} 
+          playlistName={this.state.playlistName} 
+          playlistTracks={this.state.playlistTracks}/>
         </div>
       </div>
     </div>
