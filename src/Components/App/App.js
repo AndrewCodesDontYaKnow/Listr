@@ -12,7 +12,7 @@ class App extends Component {
     this.state = {
       playlistName: 'playlist name',
       playlistTracks: [],
-      searchResults: []
+      searchResults: [],
     }
 
     this.addTrack = this.addTrack.bind(this)
@@ -29,9 +29,12 @@ class App extends Component {
   }
 
   addTrack(track) {
-    if(this.state.playlistTracks.find(savedTrack => 
-      savedTrack.id === track.id)) {
+    let tracks = this.state.playlistTracks
+    if(tracks.find(savedTrack => savedTrack.id === track.id)) {
         return;
+    } else {
+      tracks.push(track)
+      this.setState({ playlistTracks: tracks })
     }
   }
 
@@ -42,12 +45,16 @@ class App extends Component {
   savePlaylist() {
     const trackUris = this.state.playlistTracks.map(track => track.uri)
     Spotify.savePlaylist(this.state.playlistName, trackUris)
-    .then(function() {
+    .then(() => {
       this.setState({
         playlistName: 'New Playlist',
         playlistTracks: []
       })
     })
+  }
+
+  componentDidMount() {
+    window.addEventListener('load', () => {Spotify.getAccessToken()});
   }
 
   search(term) {
