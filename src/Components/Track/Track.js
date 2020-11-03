@@ -12,9 +12,9 @@ export default class Track extends Component {
 
   renderAction() {
     if (isRemoval) {
-      return <button onClick={this.removeTrack}>-</button>;
+      return <button className="Track-action" onClick={this.removeTrack}>-</button>;
     } else {
-      return <button onClick={this.addTrack}>+</button>;
+      return <button className="Track-action" onClick={this.addTrack}>+</button>;
     }
   }
 
