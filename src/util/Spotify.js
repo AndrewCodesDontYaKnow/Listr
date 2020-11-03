@@ -1,7 +1,7 @@
 // var axios = require("axios");
 let accessToken;
 const clientID = "39e5a52079bd485f8dab3d4c0556de73";
-const redirectURI = "http://localhost:3000/";
+const redirectURI = "http://grieving-growth.surge.sh";
 const Spotify = {
   getAccessToken() {
     if (accessToken) {
